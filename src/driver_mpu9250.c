@@ -4109,12 +4109,16 @@ uint8_t mpu9250_init(mpu9250_handle_t *handle)
         
         return 5;                                                                   /* return error */
     }
-    if (prev != 0x71)                                                               /* check the id */
+    if (prev != 0x71 && prev != 0x73)                                               /* check the id */
     {
         handle->debug_print("mpu9250: id is invalid.\n");                           /* id is invalid */
+        handle->debug_print("mpu9250: get id 0x%x.\n",prev);                        /* id is invalid */
         (void)a_mpu9250_deinit(handle);                                             /* iic or spi deinit */
         
         return 5;                                                                   /* return error */
+    } else {
+        // The chip id of MPU9250 is 0x71, and the id of MPU9255 is 0x73. The drivers for the two chips are the same.
+        handle->debug_print("mpu9250: get id 0x%x.\n",prev);
     }
     
     prev = 1 << 7;                                                                  /* reset the device */
